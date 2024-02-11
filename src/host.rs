@@ -416,7 +416,10 @@ impl<T: Host> PluginLoader<T> {
         unsafe {
             let lib = match Library::new(path) {
                 Ok(l) => l,
-                Err(_) => return Err(PluginLoadError::InvalidPath),
+                Err(e) => {
+                    println!("Error: {}", e);
+                    return Err(PluginLoadError::InvalidPath)
+                },
             };
 
             Ok(PluginLoader {
@@ -516,7 +519,7 @@ impl PluginInstance {
     }
 }
 
-trait Dispatch {
+pub trait Dispatch {
     fn get_effect(&self) -> *mut AEffect;
 
     /// Send a dispatch message to the plugin.
